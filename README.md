@@ -49,9 +49,11 @@ npx skills add zouaiyong/test-strategy
 
 ```text
 .
-├── SKILL.md                        # Agent 入口：选评估范围、6 步白盒摸底、三层模型与 1 次独立评审闭环
+├── SKILL.md                        # Agent 入口：选评估范围、流程主干、三层模型与五条尺子
 └── references/
-    └── report-template.md          # 测试策略报告 7 节落盘模板
+    ├── whitebox-recon.md           # 6 步白盒摸底细则与第三层 6 大类源码特征识别字典
+    ├── report-template.md          # 测试策略报告 7 节落盘模板
+    └── review-prompt.md            # 1 次轻量独立评审子 Agent 模板与 5 项核查维度
 ```
 
 ---
