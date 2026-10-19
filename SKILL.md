@@ -1,6 +1,6 @@
 ---
 name: test-strategy-advisor
-description: Use when the user asks what tests a project or module needs, provides an API doc (Swagger/Knife4j/OpenAPI) or repo and asks "你能做什么测试 / 还需要做哪些测试 / 要不要做接口测试 / 哪些用单测哪些用手工 / 接下来怎么开始测", or wants to decide between unit tests, API/integration tests, and manual UI testing without redundant effort.
+description: 分析项目或模块的测试策略与分层取舍（单测 vs 真库SQL/接口联调 vs 页面手工测试），产出带前置数据、操作步骤、预期结果的可执行测试策略报告。当用户问「你能做什么测试 / 还需要做哪些测试 / 要不要做接口测试 / 哪些用单测哪些用手工 / 接下来怎么开始测 / 怎么少做重复测试 / 出个测试策略或测试方案」，或给出代码仓库、分支改动、Swagger/Knife4j/OpenAPI 接口文档、覆盖矩阵要评估剩余测试工作时使用。
 ---
 
 # 项目测试策略与分层取舍（不硬凑、给可执行明细）
