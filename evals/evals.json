@@ -1,0 +1,61 @@
+{
+  "skill_name": "test-strategy",
+  "evals": [
+    {
+      "id": 1,
+      "name": "full-scan-source-only-finds-all-blind-spots",
+      "prompt": "项目在 {fixture}/storage-fee-demo，是个 Spring Boot + MyBatis-Plus 的存储费模块，还没写单测也没有用例文档。看全量代码，帮我出一份测试策略：哪些该写单测、哪些必须到测试环境真库验、哪些页面手工点掉就行。报告写到 {fixture}/storage-fee-demo/doc/testcases/ 下。",
+      "expected_output": "按 §1~§7 七节落盘；§3 列出 Calculator / validateByType / validateRow 三个单测目标并明确七个透传接口不需要接口脚本；§4.1 捞出 4A-1、4A-2、4B-1、4B-3、4C-1、4C-2 且每行有前置/操作/预期；§4.2 列出 XxlJob 与 FeignClient；§6 六大类各至少一条且含被注释的 batchConfirm；全程不向用户索要文档。",
+      "files": [
+        "evals/fixtures/storage-fee-demo"
+      ],
+      "expectations": [
+        "报告文件存在于 doc/testcases/ 下且包含 §1~§7 七节标题",
+        "§1 评估模式写为全量代码评估，项目特征判为「重 SQL 报表 + 规则计算混合」或等价表述",
+        "§3 建议优先补单测的目标包含 StorageFeeCalculator#calc（或 tieredPrice）、StorageFeeBizService#validateByType、StorageFeeImporter#validateRow",
+        "§3.1 明确写出不需要为 /storageFee 下的纯透传接口逐个写接口自动化脚本，并说明 Controller 为 1 行委托",
+        "§4.1 包含 StorageFeeMapper.xml#selectMonthlySummary，并指出 UNION ALL 补 0 行、NOT EXISTS、三表各自 is_deleted=0 中至少两点",
+        "§4.1 包含 StorageFeeBizService#list 的裸 .or() 条件短路风险，并给出带 warehouseCode + keyword 查询不串数据的验法",
+        "§4.1 包含 StorageFeeBizService#reverse 的 lambdaUpdate().set(…, null) 需真库验 confirm_amount / confirm_by 为 NULL",
+        "§4.1 包含 uk_warehouse_month 唯一索引不含 is_deleted 与 @TableLogic 软删后同仓库同账期再新增的冲突验法",
+        "§4.1 包含 save 的主子表 remove + saveBatch 事务验法",
+        "§4.1 每一行都有「前置数据」「操作步骤」「预期结果」三要素，没有只写「验证 SQL 正确性」的行",
+        "§4.2 列出 @XxlJob storageFeeSettleHandler（不传参 + 传 yyyy-MM 两种跑法）和 @FeignClient wms-base（下拉框 / 保存校验触发点）",
+        "§5 是 Step 1 ~ Step N 剧本式步骤，并引用了 §4.1 的编号",
+        "§6 六大类每类至少一条，且第 6 类包含 Controller 里被注释掉的 /batchConfirm",
+        "§6 第 2 类提到 StorageFeeSearchPO.billMonth 后端不兜底、前端应默认上月",
+        "§6 第 3 类提到按 type 切换时 fixedArea / firstPieceFee / nextPieceFee 的显隐",
+        "对话过程中没有向用户索要 Swagger、接口文档或功能用例"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "asks-scope-before-scanning",
+      "prompt": "项目在 {fixture}/storage-fee-demo，帮我看看还需要做哪些测试。",
+      "expected_output": "未说明范围时先用结构化选项让用户在「仅当前分支改动」与「全量代码」之间选择，选定前不读源码、不生成报告。无交互环境下按分支模式默认执行并在报告首行标注。",
+      "files": [
+        "evals/fixtures/storage-fee-demo"
+      ],
+      "expectations": [
+        "回复或工具调用中出现「请选择测试策略评估范围」单选，两个选项分别是仅当前分支改动与评估全量代码",
+        "在用户选择之前没有读取 src/ 下任何源码文件，也没有读取 references/ 细则",
+        "在用户选择之前 doc/testcases/ 下没有生成任何文件",
+        "若运行环境无法弹窗（子 agent / 后台），则默认按分支模式执行并在报告 §1 首行标注「未经用户确认，默认按分支模式」"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "no-source-swagger-only-degrades-to-blackbox",
+      "prompt": "我手上只有测试环境的 Knife4j 文档，接口分组叫「存储费管理」，有 list / save / delete / reverse / import / export / monthlySummary 七个接口，开发的代码还没合到我能拉的分支。帮我出个测试策略，看看要怎么测。",
+      "expected_output": "明确说明无源码无法判断 Controller 厚度与 SQL 盲区，第一层单测为 0，只能按接口契约 + 页面做黑盒；首选建议先拉到开发分支再做白盒评估；不杜撰 XML / Wrapper / Job 等源码级发现。",
+      "files": [],
+      "expectations": [
+        "回复明确指出当前无源码，无法做单测与持久层白盒分析，第一层为 0",
+        "首选建议是先拉取或切换到开发分支补做白盒评估",
+        "给出的黑盒验证项仅基于接口契约与页面行为，不杜撰 XML、Wrapper、Job、Client 等源码级发现",
+        "没有把七个接口逐个铺成接口自动化用例清单硬凑篇幅",
+        "没有向用户追问 PRD 或功能用例后才给结论"
+      ]
+    }
+  ]
+}

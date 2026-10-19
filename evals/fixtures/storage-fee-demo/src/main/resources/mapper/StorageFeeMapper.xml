@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.fee.mapper.StorageFeeMapper">
+
+    <!-- 月度汇总：有费用的仓库 UNION ALL 当月没费用但有配置的仓库（补 0 行） -->
+    <select id="selectMonthlySummary" resultType="demo.fee.vo.StorageFeeVO">
+        SELECT w.warehouse_code,
+               w.warehouse_name,
+               f.bill_month,
+               ROUND(SUM(IFNULL(f.amount, 0)), 2)         AS amount,
+               ROUND(SUM(IFNULL(f.confirm_amount, 0)), 2) AS confirm_amount,
+               COUNT(DISTINCT d.sku_code)                 AS sku_count
+        FROM storage_fee f
+                 LEFT JOIN warehouse w ON w.warehouse_code = f.warehouse_code AND w.is_deleted = 0
+                 LEFT JOIN storage_fee_detail d ON d.fee_id = f.id AND d.is_deleted = 0
+        WHERE f.is_deleted = 0
+        <if test="warehouseCode != null and warehouseCode != ''">
+            AND f.warehouse_code = #{warehouseCode}
+        </if>
+        <if test="billMonth != null">
+            AND f.bill_month = #{billMonth}
+        </if>
+        GROUP BY w.warehouse_code, w.warehouse_name, f.bill_month
+        HAVING SUM(IFNULL(f.amount, 0)) &gt; 0
+
+        UNION ALL
+
+        SELECT w.warehouse_code,
+               w.warehouse_name,
+               #{billMonth} AS bill_month,
+               0            AS amount,
+               0            AS confirm_amount,
+               0            AS sku_count
+        FROM warehouse w
+        WHERE w.is_deleted = 0
+          AND NOT EXISTS (SELECT 1
+                          FROM storage_fee f2
+                          WHERE f2.warehouse_code = w.warehouse_code
+                            AND f2.bill_month = #{billMonth}
+                            AND f2.is_deleted = 0)
+        <if test="warehouseCode != null and warehouseCode != ''">
+            AND w.warehouse_code = #{warehouseCode}
+        </if>
+        ORDER BY warehouse_code
+    </select>
+
+</mapper>

@@ -1,0 +1,23 @@
+[
+  {"query": "项目在 D:\\work\\wms-bill，feature/storage-fee-v2 分支刚开发完准备提测，帮我看看这次改动还需要做哪些测试，哪些用单测就够了", "should_trigger": true},
+  {"query": "这个 Spring Boot 项目的存储费模块要不要做接口测试啊？开发说 Controller 都是透传的，我感觉没必要全写一遍", "should_trigger": true},
+  {"query": "接手了一个老的 Java 后端仓库（MyBatis-Plus），没有任何单测和用例，接下来怎么开始测？给个测试方案", "should_trigger": true},
+  {"query": "出个测试策略，doc/testcases 里有 testcase-to-unittest 生成的「对账单-自动化覆盖矩阵.md」，看看单测没覆盖到的还剩哪些要手工测", "should_trigger": true},
+  {"query": "我们每次提测都把 swagger 里所有接口过一遍，太重复了，怎么少做重复测试？项目在 C:\\code\\settlement-center", "should_trigger": true},
+  {"query": "帮我评估一下这个仓库 origin/main 到当前分支的改动波及面，哪些老模块需要回归哪些不用，然后告诉我该怎么测", "should_trigger": true},
+  {"query": "knife4j 地址 http://10.1.2.3:8080/doc.html，仓库也在本地，帮我比对一下线上接口和代码有没有漂移，再出个测试分层方案", "should_trigger": true},
+  {"query": "这个模块有很多手写 mapper xml 的报表 SQL，单测都 mock 了 DAO，我担心真库跑有问题，你能帮我判断哪些必须到测试环境真库验吗", "should_trigger": true},
+  {"query": "你能帮我做什么测试？项目是 ~/proj/fee-service，马上要提测了", "should_trigger": true},
+  {"query": "测试策略报告再出一份，这次只看 git diff 的改动，不要全量", "should_trigger": true},
+
+  {"query": "帮我把存储费管理这个需求的用例写成单测，用例在 doc/testcases/存储费管理-测试用例.md，项目在 ./storage-fee-demo", "should_trigger": false},
+  {"query": "这是 PRD 的飞书链接 https://xxx.feishu.cn/wiki/abc，帮我按需求写一份可入库的测试用例，导出 Excel", "should_trigger": false},
+  {"query": "看看这段 SQL 对不对，LEFT JOIN warehouse 之后 SUM 出来的金额比预期大了一倍", "should_trigger": false},
+  {"query": "帮我 review 一下 StorageFeeBizService 这个类的代码，看看有没有 bug 和性能问题", "should_trigger": false},
+  {"query": "单测红了 3 条，开发说是用例写错了，帮我核对一下断言和用例判据是不是一致", "should_trigger": false},
+  {"query": "给 StorageFeeCalculator 补几个 JUnit 测试，覆盖一下阶梯计费的边界", "should_trigger": false},
+  {"query": "帮我用 Postman 写一组 /storageFee/save 的接口自动化脚本，要带断言", "should_trigger": false},
+  {"query": "测试环境 /storageFee/list 接口报 500，日志里是 DuplicateKeyException，帮我排查一下", "should_trigger": false},
+  {"query": "写一份存储费模块的测试报告，本轮执行了 120 条用例，通过 115 条，有 5 个缺陷", "should_trigger": false},
+  {"query": "帮我设计这个页面的测试要点，输出 XMind，功能是存储费配置的新增编辑删除", "should_trigger": false}
+]
