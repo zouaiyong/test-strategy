@@ -51,8 +51,14 @@ evals/
 
 ## description 触发评测
 
-`trigger-eval.json` 的负例都是近义干扰：写单测、从 PRD 出用例、单条 SQL 审查、代码评审、断言核对、接口自动化脚本、线上排障、测试报告、测试要点。跑法同 skill-creator：
+`trigger-eval.json` 的负例都是近义干扰：写单测、从 PRD 出用例、单条 SQL 审查、代码评审、断言核对、接口自动化脚本、线上排障、测试报告、测试要点。
 
-```bash
-python -m scripts.run_loop --eval-set evals/trigger-eval.json --skill-path . --model <当前模型> --max-iterations 5 --verbose
-```
+两种跑法：
+
+1. 本机 skill-creator 带 `scripts/run_loop.py` 且 `claude -p` 可用时：
+   ```bash
+   python -m scripts.run_loop --eval-set evals/trigger-eval.json --skill-path . --model <当前模型> --max-iterations 5 --verbose
+   ```
+2. 没有脚本或 `claude -p` 不可用时，用子 agent 盲判：把 test-strategy 的 description 与 `testcase-design` / `testcase-to-unittest` / `testcase-closed-loop` 等姊妹 skill 的 description 拼成一份 `<available_skills>`，让 2～4 个独立子 agent 对 20 条查询逐条选「首选 skill 或 none」（正序、逆序各跑一遍），统计正例命中与负例误触。新旧 description 各跑一组即可对比。这种方式样本少、是批量判断，只能说明有无明显回归，不能替代 run_loop 的单条独立采样。
+
+2026-10 的一轮盲判里新旧 description 均 20/20，当前负例对两版都没有区分度；下一轮想优化 description 时先补更贴边的负例（测试覆盖率够不够、性能测试方案、接口幂等、单测太慢、列出所有接口）。
