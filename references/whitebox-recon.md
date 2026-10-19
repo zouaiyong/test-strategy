@@ -17,6 +17,7 @@
 1. 找基准主干（依次看 `origin/master`、`origin/main`、`master`、`main`），同时覆盖「已提交分支改动 + 未提交工作区/暂存区 + 未追踪新文件」：
    - 取分叉基点 `git merge-base <base> HEAD`（记为 `<mb>`），再跑 `git diff --stat <mb>` 与 `git diff <mb>`。对比分叉基点而不是直接对比 `<base>`，是为了避免把主干上别人后合入的提交误算成本次改动。
    - 若无法取到 `<mb>`，则 `git diff <base>...HEAD`（已提交增量）+ `git diff HEAD`（未提交修改）。
+   - 目录不是 git 仓库、或没有任何可用基准分支时，分支模式无法成立：把范围内全部源文件视为本次改动（效果等同全量），并在报告 §1 评估模式一行写明「无 git 基线，已按全量处理」。
    - 再跑 `git status -s`，把 `??` 未追踪源码文件纳入范围（排除测试报告、构建产物等非业务源码）。
 2. 把改动文件按层归类：`Controller`、`BizService/Service`、`Entity/PO/RO`、`mapper/*.xml / DAO`、`Job/MQ/Client`、`公共工具类/常量/配置`。
 3. 反向追查波及面：改了公共工具类、枚举、Entity 字段或共用子方法时，Grep 反向搜出哪些未改动的 `BizService / Controller` 调用了它，一并纳入范围。这是防止被连带改坏的老功能漏测。
