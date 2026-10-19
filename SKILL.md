@@ -1,6 +1,6 @@
 ---
 name: test-strategy
-description: 分析项目或模块的测试策略与分层取舍（单测 vs 真库SQL/接口联调 vs 页面手工测试），经 1 次独立评审挑刺后产出带前置数据、操作步骤、预期结果的可执行测试策略报告。当用户问「你能做什么测试 / 还需要做哪些测试 / 要不要做接口测试 / 哪些用单测哪些用手工 / 接下来怎么开始测 / 怎么少做重复测试 / 出个测试策略或测试方案」，或给出代码仓库、分支改动、Swagger/Knife4j/OpenAPI 接口文档、覆盖矩阵要评估剩余测试工作时使用。
+description: 分析项目或模块的测试策略与分层取舍（单测 vs 真库SQL/接口联调 vs 页面手工测试），产出带前置数据、操作步骤、预期结果的可执行测试策略报告。当用户问「你能做什么测试 / 还需要做哪些测试 / 要不要做接口测试 / 哪些用单测哪些用手工 / 接下来怎么开始测 / 怎么少做重复测试 / 出个测试策略或测试方案」，或给出代码仓库、分支改动、Swagger/Knife4j/OpenAPI 接口文档、覆盖矩阵要评估剩余测试工作时使用。
 ---
 
 # 项目测试策略与分层取舍（不硬凑、给可执行明细）
@@ -65,13 +65,9 @@ description: 分析项目或模块的测试策略与分层取舍（单测 vs 真
 
 ---
 
-## 三、初稿落盘与 1 次轻量独立评审（最多 1 轮，修完即交付）
+## 三、落盘与交付
 
-主 Agent 在第一节已掌握全量摸底上下文，因此**不拆写手子 Agent，由主 Agent 直接写初稿，再派 1 个独立评审子 Agent 专查「漏项、越界与套话」，主 Agent 修完即交付（最多 1 轮评审，不落 `work/` 过程文件）**：
-
-1. **主 Agent 落盘初稿**：读取 [references/report-template.md](references/report-template.md)，严格按 7 节模板生成 `doc/testcases/{项目或模块}-测试策略.md`。
-2. **派 1 个独立评审子 Agent**：读取 [references/review-prompt.md](references/review-prompt.md)，将其中 Prompt 模板填好路径后派给只读/通用子 Agent，专项核查 `[SQL-n]` 真库盲区漏项、`[MAT-n]` 矩阵缺口漏转、`[EXEC-n]` 可执行性套话、`[SCOPE-n]` 违背不硬凑/范围越界、`[MAN-n]` 第三层 6 大类残缺。
-3. **一次性修复并交付**：评审「通过」则直接交付；判「需修改」则主 Agent 核实并一次性修完报告（**不开第 2 轮评审**），在对话中给出精炼结论与报告路径。
+跑完第零节（选范围）与第一节（按 [references/whitebox-recon.md](references/whitebox-recon.md) 完成 6 步摸底）后，读取 [references/report-template.md](references/report-template.md)，严格按 7 节模板生成 `doc/testcases/{项目或模块}-测试策略.md`，对照下方第四节自检清单逐项核验无误后，在对话中给出精炼结论与报告路径。
 
 ---
 
@@ -86,4 +82,4 @@ description: 分析项目或模块的测试策略与分层取舍（单测 vs 真
 - [ ] 4.1 表的每一行，有没有写清 **「前置数据 → 操作步骤 → 预期结果」**，而不是只甩一句「验证 SQL 正确性」？
 - [ ] 第 5 节的手工链路，是否紧扣所选范围（分支模式只串改动与波及模块），并写成了**剧本式步骤（Step 1 ~ Step N）**？
 - [ ] 第 6 节是否覆盖了第三层全部 6 大类（不仅写了导入导出，还写全了前端默认筛选值、动态表单显隐、终态按钮置灰与弹窗、Tooltip/日志弹窗、`无实现-阻塞` 项）？
-- [ ] 初稿落盘后，是否已按 [references/review-prompt.md](references/review-prompt.md) 派 1 个独立评审子 Agent 跑完 5 项挑刺并修完所有有效问题？
+- [ ] 是否已按 [references/report-template.md](references/report-template.md) 落盘 `doc/testcases/{项目或模块}-测试策略.md`？
