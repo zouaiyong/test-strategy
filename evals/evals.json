@@ -25,6 +25,7 @@
         "§5.1 每一行都有具体的「前置数据」与「操作步骤」（随 §3 触发的允许在操作列引用 §3 场景 X 避免重抄），没有只写「验证 SQL 正确性」的空洞行",
         "§5.2 列出 @XxlJob storageFeeSettleHandler（不传参 + 传 yyyy-MM 两种跑法）和 @FeignClient wms-base（下拉框 / 保存校验触发点）",
         "§6 建议优先补单测的目标包含 StorageFeeCalculator#calc（或 tieredPrice）、StorageFeeBizService#validateByType、StorageFeeImporter#validateRow",
+        "报告正文未包含「预期结果」列或根据代码反推的「预期：」段落，且未把模板中的 AI 编写规范抄入章节导语",
         "对话过程中没有向用户索要 Swagger、接口文档或功能用例"
       ]
     },

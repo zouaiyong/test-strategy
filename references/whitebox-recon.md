@@ -119,7 +119,7 @@
    - 仅源码：读 `SavePO / UpdatePO / AddPO` 及 `BizService` 里的条件校验——出现 `if (type == A) { 校验字段 X } else if (type == B) { 校验字段 Y }` 即可反推前端有「切换类型时动态显示/隐藏/替换字段或列」的联动。
 4. **终态按钮显隐/置灰 & 二次确认弹窗**
    - 有矩阵：取终态按钮隐藏/置灰、勾选确认框前不可点、取消关闭弹窗的 `仅人工` TC。
-   - 仅源码：读 `*StatusEnum` 和 `BizService` 状态机拦截（`if (status != PENDING) throw ...`），反推终态下对应按钮应置灰或隐藏；所有 `delete / batchDelete / complete / confirm / recalc` 接口自动列入「二次确认弹窗 & 点取消不发请求」核对项。
+   - 仅源码：读 `*StatusEnum` 和 `BizService` 状态机拦截（`if (status != PENDING) throw ...`），反推终态下对应按钮应置灰或隐藏；所有 `delete / batchDelete / complete / confirm / reverse / recalc` 接口自动列入「二次确认弹窗 & 点取消不发请求」核对项。
 5. **只读详情 / Tooltip / 状态标签颜色 / 操作日志弹窗**
    - 有矩阵：取问号 icon 提示、标签颜色、日志弹框的 `仅人工` TC。
    - 仅源码：是否有 `OperateLogController` 或写操作日志代码（对应「日志」弹窗）、只读详情接口（`/detail`、`/info`）、多态枚举标签。
