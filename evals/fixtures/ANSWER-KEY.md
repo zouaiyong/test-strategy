@@ -2,7 +2,7 @@
 
 只给打分方看。fixture 是一个只读源码、不需要编译的 Spring + MyBatis-Plus 骨架（`demo.fee` 包），没有单测、没有覆盖矩阵、没有功能用例，对应 skill 的「情况 B：只有源码」。
 
-## 一、第二层（§4）真库盲区：必须全部被捞出并带「前置 → 操作 → 预期」
+## 一、第二层（§3.1）真库盲区：必须全部被捞出并带「前置 → 操作 → 预期」
 
 | 编号 | 类型 | 位置 | 埋的点 | 报告应给的验法要点 |
 |---|---|---|---|---|
@@ -14,26 +14,26 @@
 | 4C-1 | 软删 + 唯一键 | `StorageFee` 上 `@TableLogic`；`doc/sql/storage_fee.sql` 的 `uk_warehouse_month(warehouse_code, bill_month)` 不含 `is_deleted` | 删后同仓库同账期再新增会撞 `DuplicateKeyException` | 入口 `/delete` → `/save`；删一条 PENDING 后用相同仓库 + 账期再保存，预期应成功（当前实现会冲突，报告应预判） |
 | 4C-2 | 主子表 `saveBatch` + `@Transactional` | `StorageFeeBizService#save` | 先 `remove` 子表再 `saveBatch`；子表写失败主表应回滚 | 入口 `/save`；带 N 条明细保存后子表条数 = N；编辑再保存不残留旧明细 |
 
-## 二、非 HTTP 入口与外部依赖（§4.2）
+## 二、非 HTTP 入口与外部依赖（§3.2）
 
 | 类型 | 位置 | 报告应给的验法 |
 |---|---|---|
 | `@XxlJob("storageFeeSettleHandler")` | `StorageFeeSettleJob#settle` | XXL-Job 控制台不传参跑一次（取上月）+ 传 `yyyy-MM` 跑一次；核对 4A-2 |
 | `@FeignClient("wms-base")` | `WarehouseClient#exists / #options` | 页面「仓库」下拉框是否带出数据；保存时填不存在的仓库编码预期报「仓库不存在」 |
 
-## 三、第一层（§3）应建议优先补单测的目标
+## 三、第一层（§5）应建议优先补单测的目标
 
 - `StorageFeeCalculator#calc` / `#tieredPrice`：÷6000 向上取整、三档阶梯边界（30/31、60/61）、B2C ×1.2、`HALF_UP` 两位小数。
 - `StorageFeeBizService#validateByType`：AUXILIARY 必填 `fixedArea` 且 >0；B2C 必填首件/续件。
 - `StorageFeeImporter#validateRow`：空仓库码、账期格式、天数 1~365、非整数。
 
-同时 §3.1 应明确写出：**不需要**为 `/list /save /delete /reverse /import /export /monthlySummary` 七个纯透传接口逐个写接口自动化脚本（Controller 全是 1 行委托）。
+同时 §1 应明确写出：**不需要**为 `/list /save /delete /reverse /import /export /monthlySummary` 七个纯透传接口逐个写接口自动化脚本（Controller 全是 1 行委托）。
 
-## 四、第三层（§6）六大类，每类至少一条
+## 四、第三层（§4）六大类，每类都有交代（已在 §2 主链路覆盖的可引用 Step X）
 
 | 类别 | fixture 里的源码依据 | 报告应写的人工点 |
 |---|---|---|
-| 1 文件往返 | `/import` `/export`、`StorageFeeVO` 的 `@ExcelProperty`（含「存储费(元)」单位括号、`@JsonFormat` 结算时间） | 导出真 Excel 核对表头与时间格式；导入含错误行文件看 `taskId` 回执 |
+| 1 文件往返 | `/import` `/export`、`StorageFeeVO` 的 `@ExcelProperty`（含「存储费(元)」单位括号、`@JsonFormat` 结算时间） | 导出真 Excel 核对表头与时间格式；导入含错误行文件看 `taskId` 回执（可在 §2 Step X 写清并在 §4 引用） |
 | 2 前端默认筛选值 | `StorageFeeSearchPO.billMonth` 注释「后端不兜底，前端默认上个月」 | 打开页面不点筛选，看月份是否默认上月并带参请求 |
 | 3 动态表单显隐 | `validateByType`：AUXILIARY → `fixedArea`，B2C → `firstPieceFee/nextPieceFee` | 切换类型时字段显隐/必填星号 |
 | 4 终态置灰 / 二次确认 | `StorageFeeStatusEnum.SETTLED` 终态；`delete` 仅 PENDING、`reverse` 仅 CONFIRMED；`/delete` `/reverse` 自动列入二次确认 | 已结算行删除/反审按钮置灰；删除弹窗点取消不发请求 |
@@ -43,9 +43,9 @@
 ## 五、反向判据（出现即扣分）
 
 - 把七个接口逐个列成「接口测试用例」，或建议为纯透传接口写接口自动化。
-- §4.1 任一行只写「验证 SQL 正确性」而没有前置数据 / 操作 / 预期三要素。
+- §3.1 任一行只写「验证 SQL 正确性」而没有前置数据 / 操作 / 预期三要素。
 - 只读了 XML、没有抓到 `.or()` / `.last` / `lambdaUpdate` 中任何一个。
-- §6 只写了导入导出一类。
+- §4 只写了导入导出一类。
 - 没有提到 `uk_warehouse_month` 与软删的冲突。
 - 向用户索要 Swagger / 接口文档 / 功能用例后才继续。
 - 把老模块（本 fixture 只有一个模块，不适用）或不存在的模块硬凑进报告。

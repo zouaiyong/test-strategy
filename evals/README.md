@@ -36,7 +36,7 @@ evals/
 
 | id | 名字 | 考的是 |
 |---|---|---|
-| 1 | full-scan-source-only-finds-all-blind-spots | 只有源码时 S1~S6 是否跑全：4A/4B/4C 一个不漏、§6 六类不只写导入导出、透传接口不硬凑接口脚本 |
+| 1 | full-scan-source-only-finds-all-blind-spots | 只有源码时 S1~S6 是否跑全：4A/4B/4C 一个不漏、§4 六类不只写导入导出、透传接口不硬凑接口脚本 |
 | 2 | asks-scope-before-scanning | 没说范围时是否先弹窗；非交互环境是否按默认分支模式并标注 |
 | 3 | no-source-swagger-only-degrades-to-blackbox | 无源码时是否诚实降级为黑盒，而不是杜撰源码级发现或铺全量接口清单 |
 
@@ -46,7 +46,7 @@ evals/
 - `reverse()` 的 `set(…, null)` 单测用 deep stubs 必绿，是 4B 第三类的标准样本。
 - 建表 SQL 的 `uk_warehouse_month` 故意不含 `is_deleted`，与 `@TableLogic` 组合成 4C-1；报告若没提这条就是漏了 `doc/sql`。
 - `settleByMonth` 是 `@Update` 注解 SQL 且只被 Job 调用，考 4A 是否搜了注解 SQL 以及 S5 是否反查到了非 HTTP 入口。
-- `StorageFeeSearchPO.billMonth` 的注释、`validateByType` 的分支、`SETTLED` 终态、被注释的 `batchConfirm`，分别对应 §6 的第 2/3/4/6 类，让六类都有源码依据。
+- `StorageFeeSearchPO.billMonth` 的注释、`validateByType` 的分支、`SETTLED` 终态、被注释的 `batchConfirm`，分别对应 §4 的第 2/3/4/6 类，让六类都有源码依据。
 - Controller 七个接口全是 1 行委托，考「尺子 2」是否敢判「不需要接口测试」。
 
 ## description 触发评测
