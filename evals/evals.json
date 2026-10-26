@@ -5,7 +5,7 @@
       "id": 1,
       "name": "full-scan-source-only-finds-all-blind-spots",
       "prompt": "项目在 {fixture}/storage-fee-demo，是个 Spring Boot + MyBatis-Plus 的存储费模块，还没写单测也没有用例文档。看全量代码，帮我出一份测试策略：哪些该写单测、哪些必须到测试环境真库验、哪些页面手工点掉就行。报告写到 {fixture}/storage-fee-demo/doc/testcases/ 下。",
-      "expected_output": "按 §1~§7 七节落盘（§1 结论与免测边界、§2 现状盘点、§3 核心业务场景验证、§4 人工专项、§5 真库与联调、§6 规则单测）；§1 明确七个透传接口不需要接口脚本；§3 按 1. ~ N. 列出场景与操作步骤并引用 §5.1 编号；§4 六大类每类都有交代且含被注释的 batchConfirm；§5.1 捞出 4A-1、4A-2、4B-1、4B-3、4C-1、4C-2 且每行有前置数据与操作步骤（不写代码反推的预期结果）；§5.2 列出 XxlJob 与 FeignClient；§6 列出 Calculator / validateByType / validateRow 三个单测目标；全程不向用户索要文档。",
+      "expected_output": "按 §1~§7 七节落盘（§1 结论与免测边界、§2 现状盘点、§3 核心业务场景验证、§4 人工专项、§5 真库与联调、§6 规则单测）；§1 明确七个透传接口不需要接口脚本；§3 按 1. ~ N. 列出场景与操作步骤并引用 §5.1 编号；§4 六大类每类都有交代且含被注释的 batchConfirm；§5.1 捞出 4A-1、4A-2、4B-1、4B-2、4B-3、4C-1、4C-2 且每行有前置数据与操作步骤（不写代码反推的预期结果）；§5.2 列出 XxlJob 与 FeignClient；§6 列出 Calculator / validateByType / validateRow 三个单测目标；全程不向用户索要文档。",
       "files": [
         "evals/fixtures/storage-fee-demo"
       ],
@@ -18,7 +18,7 @@
         "§4 第 2 类提到 StorageFeeSearchPO.billMonth 后端不兜底",
         "§4 第 3 类提到按 type 切换时 fixedArea / firstPieceFee / nextPieceFee 的字段变化",
         "§5.1 包含 StorageFeeMapper.xml#selectMonthlySummary，并指出 UNION ALL 补 0 行、NOT EXISTS、三表各自 is_deleted=0 中至少两点",
-        "§5.1 包含 StorageFeeBizService#list 的裸 .or() 条件短路风险，并给出带 warehouseCode + keyword 查询的操作步骤",
+        "§5.1 包含 StorageFeeBizService#list 的裸 .or() 条件短路风险与 .last(\"LIMIT 500\") 硬编码分页冲突，并给出带 warehouseCode + keyword 查询的操作步骤",
         "§5.1 包含 StorageFeeBizService#reverse 的 lambdaUpdate().set(…, null) 需真库核对 confirm_amount / confirm_by 字段落值",
         "§5.1 包含 uk_warehouse_month 唯一索引不含 is_deleted 与 @TableLogic 软删后同仓库同账期再新增的操作步骤",
         "§5.1 包含 save 的主子表 remove + saveBatch 事务操作步骤",
